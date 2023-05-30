@@ -1,10 +1,20 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-int main(){
+void lista_todas_marcas();
+void lista_todos_produtos();
+void lista_produtos_estado();
+void lista_produtos_marcas();
+void estado_produto_caro();
+void fabricante_produto_barato();
+void lista_produtos_crescente();
+void lista_produtos_valor_lucro();
+void lista_produtos_percentual_lucro();
+void retorno_saida();
+
+int main(void){
 	
 	int opcao;
-	char s,n;
 	
 	printf("===================================================================================\n");
 	printf("\t\t\t\t\tMENU\n");
@@ -28,97 +38,144 @@ int main(){
 	switch (opcao){
 	
 	case 1: 
-		printf("===================================================================================\n");
-		printf("\t\t\tRELATORIO 1- LISTA DE TODAS AS MARCAS\n");
-		printf("===================================================================================\n");
-		
-		printf("Marca\t\t|\tSite\t\t|\tTelefone\t|\tUF\t\t\n");
-		printf("----------------+-----------------------+-----------------------+------------------\n");
-		
+		lista_todas_marcas();
 		break;
 	
-	
 	case 2: 
-		printf("===================================================================================\n");
-		printf("\t\t\tRELATORIO 2- LISTA DE TODAS OS PRODUTOS\n");
-		printf("===================================================================================\n");
-		
-		printf("Marca\t\t|\tSite\t\t|\tTelefone\t|\tUF\t\t\n");
-		printf("----------------+-----------------------+-----------------------+------------------\n");
-		
+		lista_todos_produtos();
 		break;
 		
 	case 3:
-		printf("===================================================================================\n");
-		printf("\t\t\tRELATORIO 3- Escolha um estado\n");
-		printf("===================================================================================\n");
-		
-		
-		
+		lista_produtos_estado();
 		break;
 		
 	case 4:
-		printf("===================================================================================\n");
-		printf("\t\t\tRELATORIO 4- Escolha uma marca\n");
-		printf("===================================================================================\n");
+		lista_produtos_marcas();
+        break;
 		
 	case 5:
-		printf("===================================================================================\n");
-		printf("\t\t\tRELATORIO 5- ESTADO DO PRODUTO MAIS CARO\n");
-		printf("===================================================================================\n");
+		estado_produto_caro();
+        break;
 		
 	case 6:
-		printf("===================================================================================\n");
-		printf("\t\t\tRELATORIO 6- FABRICANTE COM PRODUTO MAIS BARATO\n");
-		printf("===================================================================================\n");
-		
-		
-		
-		break;
+		fabricante_produto_barato();
+        break;
 	
 	case 7:
-		printf("===================================================================================\n");
-		printf("\t\t\tRELATORIO 7- LISTA DE TODAS OS PRODUTOS EM ORDEM CRESCENTE (VALOR)\n");
-		printf("===================================================================================\n");
-		
-	
+		lista_produtos_crescente();
 		break;	
 	
 	case 8:
-		printf("===================================================================================\n");
-		printf("\t\t\tRELATORIO 2- LISTA DE TODAS OS PRODUTOS EM ORDEM CRESCENTE (LUCRO)\n");
-		printf("===================================================================================\n");
-
-
-
+        lista_produtos_valor_lucro();
 		break;
 		
 	case 9:
-		printf("===================================================================================\n");
-		printf("\t\t\tRELATORIO 2- LISTA DE TODAS OS PRODUTOS EM ORDEM CRESCENTE (PERCENTUAL LUCRO)\n");
-		printf("===================================================================================\n");
-		
-
-		
+        lista_produtos_percentual_lucro();
 		break;
 		
 	case 0:
-		
-		printf("===================================================================================\n");
-		printf("\t\t\tDeseja Sair?\n");
-		printf("===================================================================================\n");
-		
-		printf("Se sim, digite: 'S'\n");
-		printf("Se nao, digite: 'N'\n");
-		
-		if(s){
-			exit;	
-		}
-		
-}
-	
-	
-	
+        printf("Encerrando o programa...\n");
+        exit(0);
+    }
+
 	return 0;
 }
 
+void lista_todas_marcas(){
+
+    printf("\n\n===================================================================================\n");
+	printf("\t\t\tRELATORIO 1- LISTA DE TODAS AS MARCAS\n");
+	printf("===================================================================================\n");
+		
+	printf("Marca\t\t|\tSite\t\t|\tTelefone\t|\tUF\t\t\n");
+	printf("----------------+-----------------------+-----------------------+------------------\n");
+    retorno_saida();
+}
+
+void lista_todos_produtos(){
+
+    printf("\n\n===================================================================================\n");
+	printf("\t\t\tRELATORIO 2- LISTA DE TODAS OS PRODUTOS\n");
+	printf("===================================================================================\n");
+		
+	printf("Marca\t\t|\tSite\t\t|\tTelefone\t|\tUF\t\t\n");
+	printf("----------------+-----------------------+-----------------------+------------------\n");
+    retorno_saida();
+}
+
+void lista_produtos_estado(){
+
+    printf("\n\n===================================================================================\n");
+	printf("\t\t\tRELATORIO 3- Escolha um estado\n");
+	printf("===================================================================================\n");
+    retorno_saida();
+}
+
+void lista_produtos_marcas(){
+
+    printf("\n\n===================================================================================\n");
+	printf("\t\t\tRELATORIO 4- Escolha uma marca\n");
+	printf("===================================================================================\n");
+    retorno_saida();
+}
+
+void estado_produto_caro(){
+
+    printf("\n\n===================================================================================\n");
+	printf("\t\t\tRELATORIO 5- ESTADO DO PRODUTO MAIS CARO\n");
+	printf("===================================================================================\n");
+    retorno_saida();
+}
+
+void fabricante_produto_barato(){
+
+    printf("\n\n===================================================================================\n");
+	printf("\t\t\tRELATORIO 6- FABRICANTE COM PRODUTO MAIS BARATO\n");
+	printf("===================================================================================\n");
+    retorno_saida();
+}
+void lista_produtos_crescente(){
+
+    printf("\n\n===================================================================================\n");
+	printf("\t\t\tRELATORIO 7- LISTA DE TODAS OS PRODUTOS EM ORDEM CRESCENTE (VALOR)\n");
+	printf("===================================================================================\n");
+    retorno_saida();
+}
+void lista_produtos_valor_lucro(){
+
+    printf("\n\n===================================================================================\n");
+	printf("\t\t\tRELATORIO 2- LISTA DE TODAS OS PRODUTOS EM ORDEM CRESCENTE (LUCRO)\n");
+	printf("===================================================================================\n");
+    retorno_saida();
+}
+void lista_produtos_percentual_lucro(){
+
+    printf("\n\n===================================================================================\n");
+	printf("\t\t\tRELATORIO 2- LISTA DE TODAS OS PRODUTOS EM ORDEM CRESCENTE (PERCENTUAL LUCRO)\n");
+	printf("===================================================================================\n");
+    retorno_saida();
+}
+
+void retorno_saida() {
+    int opcao;
+
+    printf("\n\n- [0] voltar para a tela principal\n");
+    printf("- [9] sair do programa\n");
+    printf("\nEscolha: ");
+    scanf("%d", &opcao);
+   
+    switch (opcao)
+    {
+    case 0:
+        main();
+        break;
+
+    case 9:
+        printf("Encerrando o programa...\n");
+        exit(0);
+        break;
+    
+    default:
+        break;
+    }
+}

@@ -1,3 +1,4 @@
+#include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
 #define TAM_FABRICANTES 2 // min 2 max 5
@@ -28,18 +29,18 @@ void estado_produto_caro();
 void fabricante_produto_barato();
 void lista_produtos_crescente();
 void lista_produtos_valor_lucro();
-void lista_produtos_percentual_lucro();
+void lista_produtos_percentual_lucro(Produtos produto[], int qtd_produtos);
 void retorno_saida();
 int le_valida_opcao_menu();
 
 int main(void){
 
-	Produtos produto[TAM_PRODUTOS]; //declarar como vetor
-	Fabricantes fabricante[TAM_FABRICANTES]; // declarar como vetor
+	Produtos produto[TAM_PRODUTOS];
+	Fabricantes fabricante[TAM_FABRICANTES];
 	
 	int opcao, qtd_produtos=0, qtd_fabricantes=0;
     
-	
+
 	printf("===================================================================================\n");
 	printf("\t\t\t\t\tMENU\n");
 	printf("===================================================================================\n");
@@ -60,7 +61,7 @@ int main(void){
 	switch (opcao){
 	
 	case 1: 
-		lista_todas_marcas(fabricante, qtd_fabricantes); // depois alterar qtd
+		lista_todas_marcas(fabricante, qtd_fabricantes);
 		break;
 	
 	case 2: 
@@ -92,7 +93,7 @@ int main(void){
 		break;
 		
 	case 9:
-        lista_produtos_percentual_lucro();
+        lista_produtos_percentual_lucro(produto, qtd_produtos);
 		break;
 		
 	case 0:
@@ -107,22 +108,23 @@ void lista_todas_marcas(Fabricantes fabricante[], int qtd_fabricante){
     int i=0;
 
     printf("\n\n===================================================================================\n");
-	printf("\t\t\tRELATORIO 1- LISTA DE TODAS AS MARCAS\n");
+	printf("\t\t\tRELATORIO 1 - LISTA DE TODAS AS MARCAS\n");
 	printf("===================================================================================\n");
 		
 	printf("Marca\t\t|\tSite\t\t|\tTelefone\t|\tUF\t\t\n");
 	printf("----------------+-----------------------+-----------------------+------------------\n");
     for(i=0; i<qtd_fabricante; i++){
         printf("%s\t\t| %s\t| %d\t\t| %s\n",fabricante[i].marca, fabricante[i].site, fabricante[i].telefone, fabricante[i].uf);
+		printf("----------------+-----------------------+-----------------------+------------------\n");
     }
-	printf("----------------+-----------------------+-----------------------+------------------\n");
+
     retorno_saida();
 }
 
 void lista_todos_produtos(){
 
     printf("\n\n===================================================================================\n");
-	printf("\t\t\tRELATORIO 2- LISTA DE TODAS OS PRODUTOS\n");
+	printf("\t\t\tRELATORIO 2 - LISTA DE TODAS OS PRODUTOS\n");
 	printf("===================================================================================\n");
 		
 	printf("Marca\t\t|\tSite\t\t|\tTelefone\t|\tUF\t\t\n");
@@ -133,7 +135,7 @@ void lista_todos_produtos(){
 void lista_produtos_estado(){
 
     printf("\n\n===================================================================================\n");
-	printf("\t\t\tRELATORIO 3- Escolha um estado\n");
+	printf("\t\t\tRELATORIO 3 - Escolha um estado\n");
 	printf("===================================================================================\n");
     retorno_saida();
 }
@@ -141,7 +143,7 @@ void lista_produtos_estado(){
 void lista_produtos_marcas(){
 
     printf("\n\n===================================================================================\n");
-	printf("\t\t\tRELATORIO 4- Escolha uma marca\n");
+	printf("\t\t\tRELATORIO 4 - Escolha uma marca\n");
 	printf("===================================================================================\n");
     retorno_saida();
 }
@@ -149,7 +151,7 @@ void lista_produtos_marcas(){
 void estado_produto_caro(){
 
     printf("\n\n===================================================================================\n");
-	printf("\t\t\tRELATORIO 5- ESTADO DO PRODUTO MAIS CARO\n");
+	printf("\t\t\tRELATORIO 5 - ESTADO DO PRODUTO MAIS CARO\n");
 	printf("===================================================================================\n");
     retorno_saida();
 }
@@ -157,14 +159,14 @@ void estado_produto_caro(){
 void fabricante_produto_barato(){
 
     printf("\n\n===================================================================================\n");
-	printf("\t\t\tRELATORIO 6- FABRICANTE COM PRODUTO MAIS BARATO\n");
+	printf("\t\t\tRELATORIO 6 - FABRICANTE COM PRODUTO MAIS BARATO\n");
 	printf("===================================================================================\n");
     retorno_saida();
 }
 void lista_produtos_crescente(){
 
     printf("\n\n===================================================================================\n");
-	printf("\t\t\tRELATORIO 7- LISTA DE TODAS OS PRODUTOS EM ORDEM CRESCENTE (VALOR)\n");
+	printf("\t\t\tRELATORIO 7 - LISTA DE TODAS OS PRODUTOS EM ORDEM CRESCENTE (VALOR)\n");
 	printf("===================================================================================\n");
 	//implementar bubblesort do valor
     retorno_saida();
@@ -172,17 +174,35 @@ void lista_produtos_crescente(){
 void lista_produtos_valor_lucro(){
 
     printf("\n\n===================================================================================\n");
-	printf("\t\t\tRELATORIO 2- LISTA DE TODAS OS PRODUTOS EM ORDEM CRESCENTE (LUCRO)\n");
+	printf("\t\t\tRELATORIO 2 - LISTA DE TODAS OS PRODUTOS EM ORDEM CRESCENTE (LUCRO)\n");
 	printf("===================================================================================\n");
 	//implementar bubblesort do lucro
     retorno_saida();
 }
-void lista_produtos_percentual_lucro(){
+void lista_produtos_percentual_lucro(Produtos produto[], int qtd_produtos){
+	
+	int i=0,j=0;
+	Produtos aux;
 
-    printf("\n\n===================================================================================\n");
-	printf("\t\t\tRELATORIO 2- LISTA DE TODAS OS PRODUTOS EM ORDEM CRESCENTE (PERCENTUAL LUCRO)\n");
-	printf("===================================================================================\n");
-	//implementar bubblesort do percentual de lucro
+    for(i=0;i<qtd_produtos;i++){
+        for(j=0;j<qtd_produtos-i-1;j++){
+            if(produto[j].percentual_lucro>produto[j+1].percentual_lucro){
+                aux = produto[j];
+                produto[j] = produto[j+1];
+                produto[j+1] = aux;
+            }
+        }
+    }
+
+    printf("\n\n=================================================================================================================================================================\n");
+	printf("\t\t\t\tRELATORIO 9 - LISTA DE TODAS OS PRODUTOS EM ORDEM CRESCENTE (PERCENTUAL LUCRO)\n");
+	printf("=================================================================================================================================================================\n");
+    printf("\tDescricao\t\t|\tPeso\t| Valor Compra\t\t| Valor Venda\t\t| Valor Lucro\t\t| %%Lucro\t| Fabricante\t\t|\n");
+	printf("--------------------------------+---------------+-----------------------+-----------------------+-----------------------+---------------+-----------------------+\n");
+	for(i=0;i<qtd_produtos;i++){
+    	printf("%s\t\t|  %.1fkg\t| R$ %.2f\t\t| R$ %.2f\t\t| R$ %.2f\t\t| %.1f%%\t\t| %s\t\t|\n",produto[i].descricao, produto[i].peso, produto[i].valor_compra, produto[i].valor_venda, produto[i].valor_lucro, produto[i].percentual_lucro, produto[i].fabricante.marca);
+    	printf("--------------------------------+---------------+-----------------------+-----------------------+-----------------------+---------------+-----------------------+\n");
+	}
     retorno_saida();
 }
 
@@ -220,5 +240,5 @@ int le_valida_opcao_menu(){
         printf("\nEscolha uma das opcoes acima: ");	
         scanf("%d",&opcao);
         count++;
-    }while(opcao != 0 && opcao != 1 && opcao != 2 && opcao != 3 && opcao != 4 && opcao != 5 && opcao != 6 && opcao != 7 && opcao != 8 && opcao != 9);
+    }while(opcao <0 || opcao >9);
 }

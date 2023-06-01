@@ -24,7 +24,7 @@
 void lista_todas_marcas(Fabricantes fabricante[], int qtd_fabricante);
 void lista_todos_produtos();
 void lista_produtos_estado();
-void lista_produtos_marcas();
+void lista_produtos_marcas(Produtos produto[], int qtd_produtos, Fabricantes fabricante[], int qtd_fabricante);
 void estado_produto_caro();
 void fabricante_produto_barato();
 void lista_produtos_crescente();
@@ -73,7 +73,7 @@ int main(void){
 		break;
 		
 	case 4:
-		lista_produtos_marcas();
+		lista_produtos_marcas(produto, qtd_produtos, fabricante, qtd_fabricantes);
         break;
 		
 	case 5:
@@ -140,12 +140,33 @@ void lista_produtos_estado(){
     retorno_saida();
 }
 
-void lista_produtos_marcas(){
+void lista_produtos_marcas(Produtos produto[], int qtd_produtos, Fabricantes fabricante[], int qtd_fabricante){
+	char marca[50];
+	int i = 0, escolha =0;
 
-    printf("\n\n===================================================================================\n");
+    printf("\n\n=================================================================================================================================================================\n");
 	printf("\t\t\tRELATORIO 4 - Escolha uma marca\n");
-	printf("===================================================================================\n");
-    retorno_saida();
+	printf("=================================================================================================================================================================\n");
+	for(i=0;i<qtd_fabricante;i++){
+		printf("- [%d] %s\n",i+1, fabricante[i].marca);
+	}
+	printf("Escolha: ");
+	scanf("%d", &escolha);
+	for(i=0;i<qtd_fabricante;i++){
+		if(escolha-1 == i){
+			strcpy(marca, fabricante[i].marca);
+		}
+	}	
+	printf("\tDescricao\t\t|\tPeso\t| Valor Compra\t\t| Valor Venda\t\t| Valor Lucro\t\t| %%Lucro\t| Fabricante\t\t|\n");
+	printf("--------------------------------+---------------+-----------------------+-----------------------+-----------------------+---------------+-----------------------+\n");
+	for(i=0; i<qtd_produtos; i++){
+		if(strcmp(marca, produto[i].fabricante.marca) == 0){
+			printf("%s\t\t|  %.1fkg\t| R$ %.2f\t\t| R$ %.2f\t\t| R$ %.2f\t\t| %.1f%%\t\t| %s\t\t|\n",produto[i].descricao, produto[i].peso, produto[i].valor_compra, produto[i].valor_venda, produto[i].valor_lucro, produto[i].percentual_lucro, produto[i].fabricante.marca);
+    		printf("--------------------------------+---------------+-----------------------+-----------------------+-----------------------+---------------+-----------------------+\n");
+	
+		}
+ 	}
+	retorno_saida();
 }
 
 void estado_produto_caro(){

@@ -24,7 +24,7 @@
 void lista_todas_marcas(Fabricantes fabricante[], int qtd_fabricante);
 void lista_todos_produtos();
 void lista_produtos_estado();
-void lista_produtos_marcas(Produtos produto[], int qtd_produtos, Fabricantes fabricante[], int qtd_fabricante);
+void lista_produtos_marcas(Produtos produto[], int qtd_produtos, Fabricantes fabricante[], int qtd_fabricantes);
 void estado_produto_caro();
 void fabricante_produto_barato();
 void lista_produtos_crescente();
@@ -32,14 +32,14 @@ void lista_produtos_valor_lucro();
 void lista_produtos_percentual_lucro(Produtos produto[], int qtd_produtos);
 void retorno_saida();
 int le_valida_opcao_menu();
+// void cadastro(Produtos produto[], int *pt_qtd_produtos, Fabricantes fabricante[], int qtd_fabricantes);
 
-int main(void){
+int main(){
 
 	Produtos produto[TAM_PRODUTOS];
 	Fabricantes fabricante[TAM_FABRICANTES];
 	
 	int opcao, qtd_produtos=0, qtd_fabricantes=0;
-    
 
 	printf("===================================================================================\n");
 	printf("\t\t\t\t\tMENU\n");
@@ -104,7 +104,7 @@ int main(void){
 	return 0;
 }
 
-void lista_todas_marcas(Fabricantes fabricante[], int qtd_fabricante){
+void lista_todas_marcas(Fabricantes fabricante[], int qtd_fabricantes){
     int i=0;
 
     printf("\n\n===================================================================================\n");
@@ -113,7 +113,7 @@ void lista_todas_marcas(Fabricantes fabricante[], int qtd_fabricante){
 		
 	printf("Marca\t\t|\tSite\t\t|\tTelefone\t|\tUF\t\t\n");
 	printf("----------------+-----------------------+-----------------------+------------------\n");
-    for(i=0; i<qtd_fabricante; i++){
+    for(i=0; i<qtd_fabricantes; i++){
         printf("%s\t\t| %s\t| %d\t\t| %s\n",fabricante[i].marca, fabricante[i].site, fabricante[i].telefone, fabricante[i].uf);
 		printf("----------------+-----------------------+-----------------------+------------------\n");
     }
@@ -140,19 +140,19 @@ void lista_produtos_estado(){
     retorno_saida();
 }
 
-void lista_produtos_marcas(Produtos produto[], int qtd_produtos, Fabricantes fabricante[], int qtd_fabricante){
+void lista_produtos_marcas(Produtos produto[], int qtd_produtos, Fabricantes fabricante[], int qtd_fabricantes){
 	char marca[50];
 	int i = 0, escolha =0;
 
     printf("\n\n=================================================================================================================================================================\n");
 	printf("\t\t\tRELATORIO 4 - Escolha uma marca\n");
 	printf("=================================================================================================================================================================\n");
-	for(i=0;i<qtd_fabricante;i++){
+	for(i=0;i<qtd_fabricantes;i++){
 		printf("- [%d] %s\n",i+1, fabricante[i].marca);
 	}
 	printf("Escolha: ");
 	scanf("%d", &escolha);
-	for(i=0;i<qtd_fabricante;i++){
+	for(i=0;i<qtd_fabricantes;i++){
 		if(escolha-1 == i){
 			strcpy(marca, fabricante[i].marca);
 		}
@@ -263,3 +263,37 @@ int le_valida_opcao_menu(){
         count++;
     }while(opcao <0 || opcao >9);
 }
+
+/* 
+void cadastro(Produtos produto[], int *pt_qtd_produtos, Fabricantes fabricante[], int qtd_fabricantes){
+	
+	int escolha=0, i=0, opcao=0;
+	
+	do{
+		printf("Descricao: ");
+		scanf(" %[^\n]s", &produto[*pt_qtd_produtos].descricao);
+		printf("Peso: ");
+		scanf("%f", &produto[*pt_qtd_produtos].peso);
+		printf("Compra: ");
+		scanf("%f", &produto[*pt_qtd_produtos].valor_compra);
+		printf("Venda: ");
+		scanf("%f", &produto[*pt_qtd_produtos].valor_venda);
+		produto[*pt_qtd_produtos].valor_lucro = produto[*pt_qtd_produtos].valor_venda - produto[*pt_qtd_produtos].valor_compra;
+		produto[*pt_qtd_produtos].percentual_lucro = (produto[*pt_qtd_produtos].valor_lucro / produto[*pt_qtd_produtos].valor_compra) * 100;
+		printf("Marca\n");
+		for(i=0;i<qtd_fabricantes;i++){
+			printf("- [%d] %s\n",i+1, fabricante[i].marca);
+		}
+		printf("Escolha: ");
+		scanf("%d", &escolha);
+		produto[*pt_qtd_produtos].fabricante = fabricante[escolha-1];
+		printf("\n\n- [0] Voltar para a tela inicial\n");
+		printf("- [9] Continuar cadastrando\n");    
+		printf("\nEscolha: ");
+    	scanf("%d", &opcao);
+		*pt_qtd_produtos = *pt_qtd_produtos + 1;
+	}while(opcao==9);
+
+}
+
+ */

@@ -1,8 +1,8 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
-#define TAM_FABRICANTES 2 // min 2 max 5
-#define TAM_PRODUTOS 5 // min 5 max 50
+#define TAM_FABRICANTES 5 // min 2 max 5
+#define TAM_PRODUTOS 50 // min 5 max 50
 #define TAM_UF 27
 
 	typedef struct{
@@ -44,17 +44,25 @@ int le_valida_opcao_uf();
 void imprimir_produtos(Produtos produto[],int i);
 void listar_uf(Uf uf[]);
 void variaveis_teste(Produtos produto[], Fabricantes fabricante[], Uf uf[],int *qtd_produtos,int *qtd_fabricantes);
+void cadastro_fabricante(Fabricantes fabricante[],int *qtd_fabricante, Uf uf[]);
+void cadastro_produto(Produtos produto[], int *pt_qtd_produtos, Fabricantes fabricante[], int qtd_fabricantes);
+void variaveis_uf(Uf uf[]);
 
 int main(){
 
 	Produtos produto[TAM_PRODUTOS];
 	Fabricantes fabricante[TAM_FABRICANTES];
 	Uf uf[TAM_UF];
-	
+	variaveis_uf(uf); // inicializacao da struct Uf
+
 	float produto_caro=0, produto_barato=0;
 	int opcao, qtd_produtos=0, qtd_fabricantes=0;
 
+	// Para testar a funcionalidade de cadastro comente o procedimento variaveis_teste() e descomente os procedimentos de cadastro
 	variaveis_teste(produto,fabricante,uf, &qtd_produtos, &qtd_fabricantes);
+	// cadastro_fabricante(fabricante, &qtd_fabricantes, uf);
+	// cadastro_produto(produto, &qtd_produtos, fabricante, qtd_fabricantes);
+	
 	
 	do{
 		system("cls");
@@ -143,6 +151,8 @@ void lista_todos_produtos(Produtos produto[], int qtd_produtos){
     printf("\n\n=================================================================================================================================================================\n");
 	printf("\t\t\tRELATORIO 2 - LISTA DE TODAS OS PRODUTOS\n");
 	printf("=================================================================================================================================================================\n");
+	printf("\tDescricao\t\t|\tPeso\t| Valor Compra\t\t| Valor Venda\t\t| Valor Lucro\t\t| %%Lucro\t| Fabricante\t\t|\n");
+	printf("--------------------------------+---------------+-----------------------+-----------------------+-----------------------+---------------+-----------------------+\n");
 	for(i=0;i<qtd_produtos;i++){
 		imprimir_produtos(produto,i);
 	}
@@ -412,6 +422,63 @@ void listar_uf(Uf uf[]){
 
 void variaveis_teste(Produtos produto[], Fabricantes fabricante[], Uf uf[],int *qtd_produtos,int *qtd_fabricantes){
 
+	strcpy(fabricante[0].marca, "LENOVO");
+  	strcpy(fabricante[0].site, "www.lenovo.com.br");
+    fabricante[0].telefone = 33334444;
+    fabricante[0].uf = uf[6];
+    	
+	strcpy(fabricante[1].marca, "SAMSUNG");
+    strcpy(fabricante[1].site, "www.samsung.com.br");
+    fabricante[1].telefone = 44443333;
+    fabricante[1].uf = uf[8];
+
+	strcpy(produto[0].descricao, "Notebook Lenovo I5");
+	produto[0].peso = 5.5;
+	produto[0].valor_compra = 1000;
+	produto[0].valor_venda = 1500.0;
+	produto[0].valor_lucro = produto[0].valor_venda - produto[0].valor_compra;
+	produto[0].percentual_lucro = (produto[0].valor_lucro / produto[0].valor_compra) * 100;
+	produto[0].fabricante = fabricante[0];
+
+	strcpy(produto[1].descricao, "Notebook Samsung I5");
+	produto[1].peso = 4.5;
+	produto[1].valor_compra = 5000;
+	produto[1].valor_venda = 7500.0;
+	produto[1].valor_lucro = produto[1].valor_venda - produto[1].valor_compra;
+	produto[1].percentual_lucro = (produto[1].valor_lucro / produto[1].valor_compra) * 100;
+	produto[1].fabricante = fabricante[1];
+
+	strcpy(produto[2].descricao, "Notebook Lenovo Ryzen7");
+	produto[2].peso = 3.5;
+	produto[2].valor_compra = 5000;
+	produto[2].valor_venda = 7300.0;
+	produto[2].valor_lucro = produto[2].valor_venda - produto[2].valor_compra;
+	produto[2].percentual_lucro = (produto[2].valor_lucro / produto[2].valor_compra) * 100;
+	produto[2].fabricante = fabricante[0];
+
+	strcpy(produto[3].descricao, "Notebook Samsung Ryzen5");
+	produto[3].peso = 6.5;
+	produto[3].valor_compra = 2000;
+	produto[3].valor_venda = 3900.0;
+	produto[3].valor_lucro = produto[3].valor_venda - produto[3].valor_compra;
+	produto[3].percentual_lucro = (produto[3].valor_lucro / produto[3].valor_compra) * 100;
+	produto[3].fabricante = fabricante[1];
+	
+	strcpy(produto[4].descricao, "Notebook Lenovo I7");
+	produto[4].peso = 3.5;
+	produto[4].valor_compra = 1500;
+	produto[4].valor_venda = 2000.0;
+	produto[4].valor_lucro = produto[4].valor_venda - produto[4].valor_compra;
+	produto[4].percentual_lucro = (produto[4].valor_lucro / produto[4].valor_compra) * 100;
+	produto[4].fabricante = fabricante[0];
+
+	*qtd_fabricantes=2;
+	*qtd_produtos=5;
+
+
+}
+
+void variaveis_uf(Uf uf[]){
 	strcpy(uf[0].nome, "Acre");
 	strcpy(uf[0].abreviacao, "AC");
 	uf[0].codigo = 12;
@@ -493,59 +560,62 @@ void variaveis_teste(Produtos produto[], Fabricantes fabricante[], Uf uf[],int *
 	strcpy(uf[26].nome, "Tocantins");
 	strcpy(uf[26].abreviacao, "TO");
 	uf[26].codigo = 17;
+}
 
-	strcpy(fabricante[0].marca, "LENOVO");
-  	strcpy(fabricante[0].site, "www.lenovo.com.br");
-    fabricante[0].telefone = 33334444;
-    fabricante[0].uf = uf[6];
-    	
-	strcpy(fabricante[1].marca, "SAMSUNG");
-    strcpy(fabricante[1].site, "www.samsung.com.br");
-    fabricante[1].telefone = 44443333;
-    fabricante[1].uf = uf[8];
+void cadastro_fabricante(Fabricantes fabricante[],int *qtd_fabricante, Uf uf[]){
 
-	strcpy(produto[0].descricao, "Notebook Lenovo I5");
-	produto[0].peso = 5.5;
-	produto[0].valor_compra = 1000;
-	produto[0].valor_venda = 1500.0;
-	produto[0].valor_lucro = produto[0].valor_venda - produto[0].valor_compra;
-	produto[0].percentual_lucro = (produto[0].valor_lucro / produto[0].valor_compra) * 100;
-	produto[0].fabricante = fabricante[0];
+		int escolha=0, opcao=0;
 
-	strcpy(produto[1].descricao, "Notebook Samsung I5");
-	produto[1].peso = 4.5;
-	produto[1].valor_compra = 5000;
-	produto[1].valor_venda = 7500.0;
-	produto[1].valor_lucro = produto[1].valor_venda - produto[1].valor_compra;
-	produto[1].percentual_lucro = (produto[1].valor_lucro / produto[1].valor_compra) * 100;
-	produto[1].fabricante = fabricante[1];
-
-	strcpy(produto[2].descricao, "Notebook Lenovo Ryzen7");
-	produto[2].peso = 3.5;
-	produto[2].valor_compra = 5000;
-	produto[2].valor_venda = 7300.0;
-	produto[2].valor_lucro = produto[2].valor_venda - produto[2].valor_compra;
-	produto[2].percentual_lucro = (produto[2].valor_lucro / produto[2].valor_compra) * 100;
-	produto[2].fabricante = fabricante[0];
-
-	strcpy(produto[3].descricao, "Notebook Samsung Ryzen5");
-	produto[3].peso = 6.5;
-	produto[3].valor_compra = 2000;
-	produto[3].valor_venda = 3900.0;
-	produto[3].valor_lucro = produto[3].valor_venda - produto[3].valor_compra;
-	produto[3].percentual_lucro = (produto[3].valor_lucro / produto[3].valor_compra) * 100;
-	produto[3].fabricante = fabricante[1];
-	
-	strcpy(produto[4].descricao, "Notebook Lenovo I7");
-	produto[4].peso = 3.5;
-	produto[4].valor_compra = 1500;
-	produto[4].valor_venda = 2000.0;
-	produto[4].valor_lucro = produto[4].valor_venda - produto[4].valor_compra;
-	produto[4].percentual_lucro = (produto[4].valor_lucro / produto[4].valor_compra) * 100;
-	produto[4].fabricante = fabricante[0];
-
-	*qtd_fabricantes=2;
-	*qtd_produtos=5;
-
+		do{
+			system("cls");
+			printf("Marca: ");
+			scanf(" %[^\n]", &fabricante[*qtd_fabricante].marca);
+			printf("Site: ");
+			scanf(" %[^\n]", &fabricante[*qtd_fabricante].site);
+			printf("Telefone: ");
+			scanf("%d", &fabricante[*qtd_fabricante].telefone);
+			printf("Estados\n");
+			listar_uf(uf);
+			printf("Escolha: ");
+			scanf("%d", &escolha);
+			fabricante[*qtd_fabricante].uf = uf[escolha-1];		
+			printf("\n\n- [0] Voltar para a tela inicial\n");
+			printf("- [9] Continuar cadastrando\n");    
+			printf("\nEscolha: ");
+    		scanf("%d", &opcao);
+			*qtd_fabricante = *qtd_fabricante + 1;
+			
+		}while(opcao == 9);
 
 }
+
+void cadastro_produto(Produtos produto[], int *pt_qtd_produtos, Fabricantes fabricante[], int qtd_fabricantes){
+	
+	int escolha=0, i=0, opcao=0;
+	
+	do{
+		system("cls");
+		printf("Descricao: ");
+		scanf(" %[^\n]s", &produto[*pt_qtd_produtos].descricao);
+		printf("Peso: ");
+		scanf("%f", &produto[*pt_qtd_produtos].peso);
+		printf("Compra: ");
+		scanf("%f", &produto[*pt_qtd_produtos].valor_compra);
+		printf("Venda: ");
+		scanf("%f", &produto[*pt_qtd_produtos].valor_venda);
+		produto[*pt_qtd_produtos].valor_lucro = produto[*pt_qtd_produtos].valor_venda - produto[*pt_qtd_produtos].valor_compra;
+		produto[*pt_qtd_produtos].percentual_lucro = (produto[*pt_qtd_produtos].valor_lucro / produto[*pt_qtd_produtos].valor_compra) * 100;
+		printf("Marca\n");
+		for(i=0;i<qtd_fabricantes;i++){
+			printf("- [%d] %s\n",i+1, fabricante[i].marca);
+		}
+		printf("Escolha: ");
+		scanf("%d", &escolha);
+		produto[*pt_qtd_produtos].fabricante = fabricante[escolha-1];
+		printf("\n\n- [0] Voltar para a tela inicial\n");
+		printf("- [9] Continuar cadastrando\n");    
+		printf("\nEscolha: ");
+    	scanf("%d", &opcao);
+		*pt_qtd_produtos = *pt_qtd_produtos + 1;
+	}while(opcao==9);
+} 

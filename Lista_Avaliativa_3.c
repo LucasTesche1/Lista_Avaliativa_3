@@ -57,6 +57,7 @@ int main(){
 	variaveis_teste(produto,fabricante,uf, &qtd_produtos, &qtd_fabricantes);
 	
 	do{
+		system("cls");
 		printf("===================================================================================\n");
 		printf("\t\t\t\t\tMENU\n");
 		printf("===================================================================================\n");
@@ -214,7 +215,7 @@ void estado_produto_caro(Produtos produto[], int qtd_produtos, float *produto_ca
 	printf("--------+-----------------------+---------------+\n");
     for(i=0; i<qtd_produtos; i++){
 		if(*produto_caro == produto[i].valor_venda){
-			printf("%d\t| %s\t|\t%s\t|\n",produto[i].fabricante.uf.codigo, produto[i].fabricante.uf.nome, produto[i].fabricante.uf.abreviacao);
+			printf("%d\t| %s\t\t\t|\t%s\t|\n",produto[i].fabricante.uf.codigo, produto[i].fabricante.uf.nome, produto[i].fabricante.uf.abreviacao);
 			printf("--------+-----------------------+---------------+\n");
 		}
     }

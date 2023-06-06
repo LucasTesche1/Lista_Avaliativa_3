@@ -59,6 +59,7 @@ int main(){
 	int opcao, qtd_produtos=0, qtd_fabricantes=0;
 
 	// Para testar a funcionalidade de cadastro comente o procedimento variaveis_teste() e descomente os procedimentos de cadastro
+	
 	variaveis_teste(produto,fabricante,uf, &qtd_produtos, &qtd_fabricantes);
 	// cadastro_fabricante(fabricante, &qtd_fabricantes, uf);
 	// cadastro_produto(produto, &qtd_produtos, fabricante, qtd_fabricantes);
@@ -492,7 +493,7 @@ void variaveis_uf(Uf uf[]){
 	strcpy(uf[3].abreviacao, "AM");
 	uf[3].codigo = 13;
 	strcpy(uf[4].nome, "Bahia");
-	strcpy(uf[4].abreviacao, "BH");
+	strcpy(uf[4].abreviacao, "BA");
 	uf[4].codigo = 29;
 	strcpy(uf[5].nome, "Ceara");
 	strcpy(uf[5].abreviacao, "CE");
@@ -568,6 +569,7 @@ void cadastro_fabricante(Fabricantes fabricante[],int *qtd_fabricante, Uf uf[]){
 
 		do{
 			system("cls");
+			printf("\tCadastro de fabricantes\n");
 			printf("Marca: ");
 			scanf(" %[^\n]", &fabricante[*qtd_fabricante].marca);
 			printf("Site: ");
@@ -579,13 +581,18 @@ void cadastro_fabricante(Fabricantes fabricante[],int *qtd_fabricante, Uf uf[]){
 			printf("Escolha: ");
 			scanf("%d", &escolha);
 			fabricante[*qtd_fabricante].uf = uf[escolha-1];		
-			printf("\n\n- [0] Voltar para a tela inicial\n");
-			printf("- [9] Continuar cadastrando\n");    
-			printf("\nEscolha: ");
-    		scanf("%d", &opcao);
+			if (*qtd_fabricante < 2){
+				opcao = 9;
+			}else{
+				printf("\n\n- [0] Voltar para a tela inicial\n");
+				printf("- [9] Continuar cadastrando\n");    
+				printf("\nEscolha: ");
+				scanf("%d", &opcao);
+			}
+			
 			*qtd_fabricante = *qtd_fabricante + 1;
 			
-		}while(opcao == 9);
+		}while(opcao == 9 && *qtd_fabricante < TAM_FABRICANTES);
 
 }
 
@@ -612,10 +619,14 @@ void cadastro_produto(Produtos produto[], int *pt_qtd_produtos, Fabricantes fabr
 		printf("Escolha: ");
 		scanf("%d", &escolha);
 		produto[*pt_qtd_produtos].fabricante = fabricante[escolha-1];
-		printf("\n\n- [0] Voltar para a tela inicial\n");
-		printf("- [9] Continuar cadastrando\n");    
-		printf("\nEscolha: ");
-    	scanf("%d", &opcao);
+			if (*pt_qtd_produtos < 5){
+				opcao = 9;
+			}else{
+				printf("\n\n- [0] Voltar para a tela inicial\n");
+				printf("- [9] Continuar cadastrando\n");    
+				printf("\nEscolha: ");
+				scanf("%d", &opcao);
+			}
 		*pt_qtd_produtos = *pt_qtd_produtos + 1;
-	}while(opcao==9);
+	}while(opcao==9 && *pt_qtd_produtos < TAM_PRODUTOS);
 } 

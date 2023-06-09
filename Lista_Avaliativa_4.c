@@ -48,7 +48,7 @@ void listar_uf(Uf uf[]);
 void variaveis_uf(Uf uf[]);
 void variaveis_teste(Produtos produto[], Fabricantes fabricante[], Uf uf[],int *qtd_produtos,int *qtd_fabricantes);
 void cadastro_fabricante(Fabricantes fabricante[],int *qtd_fabricante, Uf uf[]);
-void cadastro_produto(Produtos produto[], int *pt_qtd_produtos, Fabricantes fabricante[], int qtd_fabricantes);
+void cadastro_produto(Produtos produto[], int *pt_qtd_produtos, Fabricantes fabricante[], int qtd_fabricantes, float *produto_caro, float*produto_barato);
 
 // procedimentos bubble sort
 void bubble_crescente_venda(Produtos produto[], int qtd_produtos);
@@ -83,7 +83,7 @@ int main(){
 		cadastro_fabricante(fabricante, &qtd_fabricantes, uf);
 	}
 	if(qtd_produtos < 5){
-		cadastro_produto(produto, &qtd_produtos, fabricante, qtd_fabricantes);
+		cadastro_produto(produto, &qtd_produtos, fabricante, qtd_fabricantes, &produto_caro, &produto_barato);
 	}
 	
 	do{
@@ -159,11 +159,21 @@ int main(){
 			break;	
 
 		case 'B':
-			cadastro_fabricante(fabricante, &qtd_fabricantes, uf);
+			if(qtd_fabricantes == TAM_FABRICANTES ){
+				printf("Limite de Fabricantes atingido\n");
+				system("PAUSE");
+			}else{			
+				cadastro_fabricante(fabricante, &qtd_fabricantes, uf);
+			}
 			break;
 						
 		case 'C':
-			cadastro_produto(produto, &qtd_produtos, fabricante, qtd_fabricantes);
+			if(qtd_produtos == TAM_PRODUTOS){
+				printf("Limite de Produtos atingido\n");
+				system("PAUSE");
+			}else{
+				cadastro_produto(produto, &qtd_produtos, fabricante, qtd_fabricantes, &produto_caro, &produto_barato);
+			}
 			break;
 			
 			
@@ -613,7 +623,7 @@ void cadastro_fabricante(Fabricantes fabricante[],int *qtd_fabricante, Uf uf[]){
 
 }
 
-void cadastro_produto(Produtos produto[], int *pt_qtd_produtos, Fabricantes fabricante[], int qtd_fabricantes){
+void cadastro_produto(Produtos produto[], int *pt_qtd_produtos, Fabricantes fabricante[], int qtd_fabricantes, float *produto_caro, float*produto_barato){
 	
 	int escolha=0, i=0;
 	char opcao;
@@ -634,14 +644,22 @@ void cadastro_produto(Produtos produto[], int *pt_qtd_produtos, Fabricantes fabr
 		}
 		escolha= le_valida_escolha_marca(&qtd_fabricantes);
 		produto[*pt_qtd_produtos].fabricante = fabricante[escolha-1];
-			if (*pt_qtd_produtos < 4){
-				opcao = '9';
-			}else{
-				printf("\n\n- [0] Voltar para a tela inicial\n");
-				printf("- [9] Continuar cadastrando\n");
-				opcao=le_valida_opcao_retorno();
-			}
+		if (*pt_qtd_produtos < 4){
+			opcao = '9';
+		}else{
+			printf("\n\n- [0] Voltar para a tela inicial\n");
+			printf("- [9] Continuar cadastrando\n");
+			opcao=le_valida_opcao_retorno();
+		}
+		if(produto[*pt_qtd_produtos].valor_venda > *produto_caro){
+			*produto_caro = produto[*pt_qtd_produtos].valor_venda;
+		}
+		
+		if(i==0 || produto[i].valor_venda < *produto_barato ){
+			*produto_barato = produto[i].valor_venda;
+		}
 		*pt_qtd_produtos = *pt_qtd_produtos + 1;
+
 	}while(opcao=='9' && *pt_qtd_produtos < TAM_PRODUTOS);
 }
 

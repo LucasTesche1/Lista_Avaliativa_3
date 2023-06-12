@@ -15,6 +15,7 @@
 		char marca[30];
 		char site[50];
 		int telefone;
+		int codigo;
 		Uf uf;
 	}Fabricantes;
 
@@ -46,9 +47,8 @@ void retorno_saida();
 void imprimir_produtos(Produtos produto[],int i);
 void listar_uf(Uf uf[]);
 void variaveis_uf(Uf uf[]);
-void variaveis_teste(Produtos produto[], Fabricantes fabricante[], Uf uf[],int *qtd_produtos,int *qtd_fabricantes);
-void cadastro_fabricante(Fabricantes fabricante[],int *qtd_fabricante, Uf uf[]);
-void cadastro_produto(Produtos produto[], int *pt_qtd_produtos, Fabricantes fabricante[], int qtd_fabricantes, float *produto_caro, float*produto_barato);
+char cadastro_fabricante(Fabricantes fabricante[],int *qtd_fabricante, Uf uf[]);
+char cadastro_produto(Produtos produto[], int *pt_qtd_produtos, Fabricantes fabricante[], int qtd_fabricantes);
 
 // procedimentos bubble sort
 void bubble_crescente_venda(Produtos produto[], int qtd_produtos);
@@ -56,34 +56,48 @@ void bubble_crescete_lucro(Produtos produto[], int qtd_produtos);
 void bubble_crescente_porcentagem(Produtos produto[], int qtd_produtos);
 void bubble_az(Produtos produto[], int qtd_produtos);
 void bubble_za(Produtos produto[], int qtd_produtos);
+void bubble_az_produto_estado(Produtos produto[], int qtd_produtos);
+void bubble_az_produto_fabricante(Produtos produto[], int qtd_produtos);
 
 // funcoes le_valida
 int le_valida_opcao_menu();
 int le_valida_opcao_retorno();
 int le_valida_opcao_uf();
-int le_valida_escolha_marca(int *qtd_fabricantes);
+int le_valida_escolha_marca(int *qtd_fabricantes, Fabricantes fabricante[]);
 float le_valida_peso();
 float le_valida_compra();
 float le_valida_venda();
 
 int main(){
 
-	Produtos produto[TAM_PRODUTOS];
-	Fabricantes fabricante[TAM_FABRICANTES];
 	Uf uf[TAM_UF];
 	variaveis_uf(uf); // inicializacao da struct Uf
 
 	float produto_caro=0, produto_barato=0;
-	int qtd_produtos=0, qtd_fabricantes=0;
-	char opcao;
+	int qtd_produtos=0, qtd_fabricantes=0, i=0;
+	char opcao,escolha;
+    
+    Fabricantes* fabricante;
+    fabricante = (Fabricantes*)malloc(2 * sizeof(Fabricantes));
+    if (fabricante == NULL) {
+        printf("Memory not allocated.\n");
+        exit(0);
+    }
 
-	// variaveis_teste(produto,fabricante,uf, &qtd_produtos, &qtd_fabricantes);
+    Produtos* produto;
+    produto = (Produtos*)malloc(5 * sizeof(Produtos));
+    if (produto == NULL) {
+        printf("Memory not allocated.\n");
+        exit(0);
+    }
 
-	if(qtd_fabricantes < 2){
+	
+	for(i=0;i<2;i++){
 		cadastro_fabricante(fabricante, &qtd_fabricantes, uf);
 	}
-	if(qtd_produtos < 5){
-		cadastro_produto(produto, &qtd_produtos, fabricante, qtd_fabricantes, &produto_caro, &produto_barato);
+
+	for(i=0;i<5;i++){
+		cadastro_produto(produto, &qtd_produtos, fabricante, qtd_fabricantes);
 	}
 	
 	do{
@@ -103,7 +117,7 @@ int main(){
 		printf("- [9] Listar todos os produtos em ordem crescente de maior 'percentual de lucro'\n");
 		printf("- [A] Listar todos os produtos em ordem alfabetica crescente A-Z\n");
 		printf("- [Z] Listar todas as marcas em ordem alfabetica decrescente Z-A\n");
-		if(qtd_fabricantes<TAM_FABRICANTES){
+		if(qtd_fabricantes < TAM_FABRICANTES){
 			printf("- [B] Cadastro Fabricante\n");
 		}
 		if(qtd_produtos < TAM_PRODUTOS){
@@ -159,21 +173,35 @@ int main(){
 			break;	
 
 		case 'B':
-			if(qtd_fabricantes == TAM_FABRICANTES ){
-				printf("Limite de Fabricantes atingido\n");
-				system("PAUSE");
-			}else{			
-				cadastro_fabricante(fabricante, &qtd_fabricantes, uf);
-			}
+			do{
+				if(qtd_fabricantes == TAM_FABRICANTES){				
+					printf("Limite de Fabricantes atingido\n");
+					system("PAUSE");
+				}else{
+					fabricante = realloc(fabricante, (qtd_fabricantes + 1) * sizeof(Fabricantes));    
+					if (fabricante == NULL) {
+        				printf("Memory not allocated.\n");
+        				exit(0);
+    				}			
+					escolha = cadastro_fabricante(fabricante, &qtd_fabricantes, uf);	
+				}
+			}while(escolha == '9' && qtd_fabricantes < TAM_FABRICANTES);
 			break;
 						
 		case 'C':
-			if(qtd_produtos == TAM_PRODUTOS){
-				printf("Limite de Produtos atingido\n");
-				system("PAUSE");
-			}else{
-				cadastro_produto(produto, &qtd_produtos, fabricante, qtd_fabricantes, &produto_caro, &produto_barato);
-			}
+			do{
+				if(qtd_produtos == TAM_PRODUTOS){
+					printf("Limite de Produtos atingido\n");
+					system("PAUSE");
+				}else{
+					produto = realloc(produto, (qtd_produtos + 1) * sizeof(Produtos));    
+					if (fabricante == NULL) {
+        				printf("Memory not allocated.\n");
+        				exit(0);
+    				}			
+					escolha = cadastro_produto(produto, &qtd_produtos, fabricante, qtd_fabricantes);
+				}
+			}while(escolha == '9' && qtd_produtos < TAM_PRODUTOS);
 			break;
 			
 			
@@ -183,6 +211,9 @@ int main(){
 		}
 
 		}while(opcao != 0);
+        
+    free(fabricante);
+	free(produto);
 	return 0;
 }
 
@@ -270,12 +301,13 @@ void lista_produtos_marcas(Produtos produto[], int qtd_produtos, Fabricantes fab
 void estado_produto_caro(Produtos produto[], int qtd_produtos, float *produto_caro){
 
 	int i=0;
-
+	int aux;
 	for(i=0;i<qtd_produtos;i++){
 		if(produto[i].valor_venda > *produto_caro){
 			*produto_caro = produto[i].valor_venda;
 		}
 	}
+	bubble_az_produto_estado(produto,qtd_produtos);
 
     printf("\n\n===================================================================================\n");
 	printf("\t\t\tRELATORIO 5 - ESTADO DO PRODUTO MAIS CARO\n");
@@ -284,8 +316,11 @@ void estado_produto_caro(Produtos produto[], int qtd_produtos, float *produto_ca
 	printf("--------+-----------------------+---------------+\n");
     for(i=0; i<qtd_produtos; i++){
 		if(*produto_caro == produto[i].valor_venda){
-			printf("%d\t| %s\t\t\t|\t%s\t|\n",produto[i].fabricante.uf.codigo, produto[i].fabricante.uf.nome, produto[i].fabricante.uf.abreviacao);
-			printf("--------+-----------------------+---------------+\n");
+			if(produto[i].fabricante.uf.codigo  != aux){	
+				printf("%d\t| %s\t\t\t|\t%s\t|\n",produto[i].fabricante.uf.codigo, produto[i].fabricante.uf.nome, produto[i].fabricante.uf.abreviacao);
+				printf("--------+-----------------------+---------------+\n");
+				aux = produto[i].fabricante.uf.codigo;
+			}
 		}
     }
 	retorno_saida();
@@ -293,14 +328,13 @@ void estado_produto_caro(Produtos produto[], int qtd_produtos, float *produto_ca
 
 void fabricante_produto_barato(Produtos produto[], int qtd_produtos, float *produto_barato){
 
-	int i=0;
-
+	int i=0, aux;
 	for(i=0;i<qtd_produtos;i++){
 		if(i==0 || produto[i].valor_venda < *produto_barato ){
 			*produto_barato = produto[i].valor_venda;
 		}
 	}
-		
+	bubble_az_produto_fabricante(produto,qtd_produtos);
     printf("\n\n===================================================================================\n");
 	printf("\t\t\tRELATORIO 6 - FABRICANTE COM PRODUTO MAIS BARATO\n");
 	printf("===================================================================================\n");
@@ -308,8 +342,11 @@ void fabricante_produto_barato(Produtos produto[], int qtd_produtos, float *prod
 	printf("----------------+-----------------------+-----------------------+------------------\n");
     for(i=0; i<qtd_produtos; i++){
 		if(*produto_barato == produto[i].valor_venda){
-			printf("%s\t\t| %s\t| %d\t\t| %s\n",produto[i].fabricante.marca, produto[i].fabricante.site, produto[i].fabricante.telefone, produto[i].fabricante.uf.abreviacao);
-			printf("----------------+-----------------------+-----------------------+------------------\n");
+			if(produto[i].fabricante.codigo  != aux){	
+				printf("%s\t\t| %s\t| %d\t\t| %s\n",produto[i].fabricante.marca, produto[i].fabricante.site, produto[i].fabricante.telefone, produto[i].fabricante.uf.abreviacao);
+				printf("----------------+-----------------------+-----------------------+------------------\n");
+				aux = produto[i].fabricante.codigo;
+			}
 		}
     }
     retorno_saida();
@@ -381,6 +418,7 @@ void lista_produtos_az(Produtos produto[], int qtd_produtos){
 	printf("\tDescricao\t\t|\tPeso\t| Valor Compra\t\t| Valor Venda\t\t| Valor Lucro\t\t| %%Lucro\t| Fabricante\t\t|\n");
 	printf("--------------------------------+---------------+-----------------------+-----------------------+-----------------------+---------------+-----------------------+\n");
 	
+
 	for(i=0;i<qtd_produtos;i++){
 		imprimir_produtos(produto,i);
 	}
@@ -532,135 +570,66 @@ void variaveis_uf(Uf uf[]){
 	uf[26].codigo = 17;
 }
 
-void variaveis_teste(Produtos produto[], Fabricantes fabricante[], Uf uf[],int *qtd_produtos,int *qtd_fabricantes){
+char cadastro_fabricante(Fabricantes fabricante[],int *qtd_fabricante, Uf uf[]){
 
-	strcpy(fabricante[0].marca, "LENOVO");
-  	strcpy(fabricante[0].site, "www.lenovo.com.br");
-    fabricante[0].telefone = 33334444;
-    fabricante[0].uf = uf[6];
-    	
-	strcpy(fabricante[1].marca, "SAMSUNG");
-    strcpy(fabricante[1].site, "www.samsung.com.br");
-    fabricante[1].telefone = 44443333;
-    fabricante[1].uf = uf[8];
+	int escolha=0;
+	char opcao;
 
-	strcpy(produto[0].descricao, "Notebook Lenovo I5");
-	produto[0].peso = 5.5;
-	produto[0].valor_compra = 1000;
-	produto[0].valor_venda = 1500.0;
-	produto[0].valor_lucro = produto[0].valor_venda - produto[0].valor_compra;
-	produto[0].percentual_lucro = (produto[0].valor_lucro / produto[0].valor_compra) * 100;
-	produto[0].fabricante = fabricante[0];
-
-	strcpy(produto[1].descricao, "Notebook Samsung I5");
-	produto[1].peso = 4.5;
-	produto[1].valor_compra = 5000;
-	produto[1].valor_venda = 7500.0;
-	produto[1].valor_lucro = produto[1].valor_venda - produto[1].valor_compra;
-	produto[1].percentual_lucro = (produto[1].valor_lucro / produto[1].valor_compra) * 100;
-	produto[1].fabricante = fabricante[1];
-
-	strcpy(produto[2].descricao, "Notebook Lenovo Ryzen7");
-	produto[2].peso = 3.5;
-	produto[2].valor_compra = 5000;
-	produto[2].valor_venda = 7300.0;
-	produto[2].valor_lucro = produto[2].valor_venda - produto[2].valor_compra;
-	produto[2].percentual_lucro = (produto[2].valor_lucro / produto[2].valor_compra) * 100;
-	produto[2].fabricante = fabricante[0];
-
-	strcpy(produto[3].descricao, "Notebook Samsung Ryzen5");
-	produto[3].peso = 6.5;
-	produto[3].valor_compra = 2000;
-	produto[3].valor_venda = 3900.0;
-	produto[3].valor_lucro = produto[3].valor_venda - produto[3].valor_compra;
-	produto[3].percentual_lucro = (produto[3].valor_lucro / produto[3].valor_compra) * 100;
-	produto[3].fabricante = fabricante[1];
-	
-	strcpy(produto[4].descricao, "Notebook Lenovo I7");
-	produto[4].peso = 3.5;
-	produto[4].valor_compra = 1500;
-	produto[4].valor_venda = 2000.0;
-	produto[4].valor_lucro = produto[4].valor_venda - produto[4].valor_compra;
-	produto[4].percentual_lucro = (produto[4].valor_lucro / produto[4].valor_compra) * 100;
-	produto[4].fabricante = fabricante[0];
-
-	*qtd_fabricantes=2;
-	*qtd_produtos=5;
-
-
+	system("cls");
+	printf("\tCadastro de fabricantes\n");
+	printf("Marca: ");
+	scanf(" %[^\n]", &fabricante[*qtd_fabricante].marca);
+	printf("Site: ");
+	scanf(" %[^\n]", &fabricante[*qtd_fabricante].site);
+	printf("Telefone: ");
+	scanf("%d", &fabricante[*qtd_fabricante].telefone);
+	printf("Estados\n");
+	listar_uf(uf);
+	escolha = le_valida_opcao_uf();
+	fabricante[*qtd_fabricante].uf = uf[escolha-1];		
+	if (*qtd_fabricante < 2){
+		opcao = '9';
+	}else if(*qtd_fabricante == TAM_FABRICANTES-1){
+		opcao = '0';
+	}else{
+		printf("\n\n- [0] Voltar para a tela inicial\n");
+		printf("- [9] Continuar cadastrando\n"); 
+		opcao=le_valida_opcao_retorno();
+	}
+	fabricante[*qtd_fabricante].codigo = *qtd_fabricante +1;
+	*qtd_fabricante = *qtd_fabricante + 1;
+	return opcao;
 }
 
-void cadastro_fabricante(Fabricantes fabricante[],int *qtd_fabricante, Uf uf[]){
-
-		int escolha=0;
-		char opcao=0;
-
-		do{
-			system("cls");
-			printf("\tCadastro de fabricantes\n");
-			printf("Marca: ");
-			scanf(" %[^\n]", &fabricante[*qtd_fabricante].marca);
-			printf("Site: ");
-			scanf(" %[^\n]", &fabricante[*qtd_fabricante].site);
-			printf("Telefone: ");
-			scanf("%d", &fabricante[*qtd_fabricante].telefone);
-			printf("Estados\n");
-			listar_uf(uf);
-			printf("Escolha: ");
-			scanf("%d", &escolha);
-			fabricante[*qtd_fabricante].uf = uf[escolha-1];		
-			if (*qtd_fabricante < 1){
-				opcao = '9';
-			}else{
-				printf("\n\n- [0] Voltar para a tela inicial\n");
-				printf("- [9] Continuar cadastrando\n"); 
-				opcao=le_valida_opcao_retorno();
-			}
-			
-			*qtd_fabricante = *qtd_fabricante + 1;
-			
-		}while(opcao == '9' && *qtd_fabricante < TAM_FABRICANTES);
-
-}
-
-void cadastro_produto(Produtos produto[], int *pt_qtd_produtos, Fabricantes fabricante[], int qtd_fabricantes, float *produto_caro, float*produto_barato){
+char cadastro_produto(Produtos produto[], int *pt_qtd_produtos, Fabricantes fabricante[], int qtd_fabricantes){
 	
-	int escolha=0, i=0;
+	int escolha=0;
 	char opcao;
 	
-	do{
-		system("cls");
-		printf("\tCadastro de produtos\n");
-		printf("Descricao: ");
-		scanf(" %[^\n]s", &produto[*pt_qtd_produtos].descricao);
-		produto[*pt_qtd_produtos].peso = le_valida_peso();
-		produto[*pt_qtd_produtos].valor_compra = le_valida_compra();
-		produto[*pt_qtd_produtos].valor_venda = le_valida_venda();
-		produto[*pt_qtd_produtos].valor_lucro = produto[*pt_qtd_produtos].valor_venda - produto[*pt_qtd_produtos].valor_compra;
-		produto[*pt_qtd_produtos].percentual_lucro = (produto[*pt_qtd_produtos].valor_lucro / produto[*pt_qtd_produtos].valor_compra) * 100;
-		printf("Marca\n");
-		for(i=0;i<qtd_fabricantes;i++){
-			printf("- [%d] %s\n",i+1, fabricante[i].marca);
-		}
-		escolha= le_valida_escolha_marca(&qtd_fabricantes);
-		produto[*pt_qtd_produtos].fabricante = fabricante[escolha-1];
-		if (*pt_qtd_produtos < 4){
-			opcao = '9';
-		}else{
-			printf("\n\n- [0] Voltar para a tela inicial\n");
-			printf("- [9] Continuar cadastrando\n");
-			opcao=le_valida_opcao_retorno();
-		}
-		if(produto[*pt_qtd_produtos].valor_venda > *produto_caro){
-			*produto_caro = produto[*pt_qtd_produtos].valor_venda;
-		}
-		
-		if(i==0 || produto[i].valor_venda < *produto_barato ){
-			*produto_barato = produto[i].valor_venda;
-		}
-		*pt_qtd_produtos = *pt_qtd_produtos + 1;
 
-	}while(opcao=='9' && *pt_qtd_produtos < TAM_PRODUTOS);
+	system("cls");
+	printf("\tCadastro de produtos\n");
+	printf("Descricao: ");
+	scanf(" %[^\n]s", &produto[*pt_qtd_produtos].descricao);
+	produto[*pt_qtd_produtos].peso = le_valida_peso();
+	produto[*pt_qtd_produtos].valor_compra = le_valida_compra();
+	produto[*pt_qtd_produtos].valor_venda = le_valida_venda();
+	produto[*pt_qtd_produtos].valor_lucro = produto[*pt_qtd_produtos].valor_venda - produto[*pt_qtd_produtos].valor_compra;
+	produto[*pt_qtd_produtos].percentual_lucro = (produto[*pt_qtd_produtos].valor_lucro / produto[*pt_qtd_produtos].valor_compra) * 100;
+	escolha= le_valida_escolha_marca(&qtd_fabricantes, fabricante);
+	produto[*pt_qtd_produtos].fabricante = fabricante[escolha-1];
+	if (*pt_qtd_produtos < 5){
+		opcao = '9';
+	}else if(*pt_qtd_produtos == TAM_PRODUTOS-1){
+		opcao = '0';
+	}else{
+		printf("\n\n- [0] Voltar para a tela inicial\n");
+		printf("- [9] Continuar cadastrando\n");
+		opcao=le_valida_opcao_retorno();
+	}
+
+	*pt_qtd_produtos = *pt_qtd_produtos + 1;
+	return opcao;
 }
 
 // procedimentos bubble sort
@@ -716,7 +685,7 @@ void bubble_az(Produtos produto[], int qtd_produtos){
 
 	for(i=0;i<qtd_produtos;i++){
         for(j=0;j<qtd_produtos-i-1;j++){
-            if(strcmp(produto[j].descricao,produto[j+1].descricao) > 0){
+            if(strcmp(produto[j].descricao, produto[j+1].descricao) > 0){
                 aux = produto[j];
                 produto[j] = produto[j+1];
                 produto[j+1] = aux;
@@ -731,7 +700,7 @@ void bubble_za(Produtos produto[], int qtd_produtos){
 
 	for(i=0;i<qtd_produtos;i++){
         for(j=0;j<qtd_produtos-i-1;j++){
-            if(strcmp(produto[j].descricao,produto[j+1].descricao) < 0){
+            if(strcmp(produto[j].descricao, produto[j+1].descricao) < 0){
                 aux = produto[j];
                 produto[j] = produto[j+1];
                 produto[j+1] = aux;
@@ -740,6 +709,35 @@ void bubble_za(Produtos produto[], int qtd_produtos){
     }
 }
 
+void bubble_az_produto_estado(Produtos produto[], int qtd_produtos){
+	int i=0, j=0;
+	Produtos aux;
+
+	for(i=0;i<qtd_produtos;i++){
+        for(j=0;j<qtd_produtos-i-1;j++){
+            if(strcmp(produto[j].fabricante.uf.abreviacao, produto[j+1].fabricante.uf.abreviacao) > 0){
+                aux = produto[j];
+                produto[j] = produto[j+1];
+                produto[j+1] = aux;
+            }
+        }
+    }
+}
+
+void bubble_az_produto_fabricante(Produtos produto[], int qtd_produtos){
+	int i=0, j=0;
+	Produtos aux;
+
+	for(i=0;i<qtd_produtos;i++){
+        for(j=0;j<qtd_produtos-i-1;j++){
+            if(strcmp(produto[j].fabricante.marca, produto[j+1].fabricante.marca) > 0){
+                aux = produto[j];
+                produto[j] = produto[j+1];
+                produto[j+1] = aux;
+            }
+        }
+    }
+}
 // funcoes le_valida
 
 int le_valida_opcao_menu(){
@@ -785,12 +783,21 @@ int le_valida_opcao_uf(){
 	return opcao;	
 }
 
-int le_valida_escolha_marca(int *qtd_fabricantes){
-	int escolha=0;
-
+int le_valida_escolha_marca(int *qtd_fabricantes, Fabricantes fabricante[]){
+	int escolha=0, i=0, count=0;
+	
+	printf("Marca\n");
+	for(i=0;i<*qtd_fabricantes;i++){
+		printf("- [%d] %s\n",i+1, fabricante[i].marca);
+	}
 	do{
+		if(count >0){
+			printf("\t--Erro--\n");
+			printf("Escolha entre 1 e %d\n", *qtd_fabricantes);
+		}
 		printf("Escolha: ");
 		scanf("%d", &escolha);
+		count++;
 	}while(escolha <1 || escolha > *qtd_fabricantes);
 	
 	return escolha;

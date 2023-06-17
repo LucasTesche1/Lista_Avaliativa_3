@@ -78,28 +78,49 @@ int main(){
 	char opcao,escolha;
     
     Fabricantes* fabricante;
-    fabricante = (Fabricantes*)malloc(2 * sizeof(Fabricantes));
+    fabricante = (Fabricantes*)malloc(0 * sizeof(Fabricantes));
     if (fabricante == NULL) {
         printf("Memory not allocated.\n");
         exit(0);
     }
 
     Produtos* produto;
-    produto = (Produtos*)malloc(5 * sizeof(Produtos));
+    produto = (Produtos*)malloc(0 * sizeof(Produtos));
     if (produto == NULL) {
         printf("Memory not allocated.\n");
         exit(0);
     }
 
 	
-	for(i=0;i<2;i++){
-		cadastro_fabricante(fabricante, &qtd_fabricantes, uf);
-	}
 
-	for(i=0;i<5;i++){
-		cadastro_produto(produto, &qtd_produtos, fabricante, qtd_fabricantes);
-	}
-	
+	do{
+		if(qtd_fabricantes == TAM_FABRICANTES){				
+			printf("Limite de Fabricantes atingido\n");
+			system("PAUSE");
+		}else{
+			fabricante = realloc(fabricante, (qtd_fabricantes + 1) * sizeof(Fabricantes));    
+			if (fabricante == NULL) {
+    			printf("Memory not allocated.\n");
+    			exit(0);
+    		}			
+			escolha = cadastro_fabricante(fabricante, &qtd_fabricantes, uf);	
+		}
+	}while(escolha == '9' && qtd_fabricantes < TAM_FABRICANTES);
+
+	do{
+		if(qtd_produtos == TAM_PRODUTOS){
+			printf("Limite de Produtos atingido\n");
+			system("PAUSE");
+		}else{
+			produto = realloc(produto, (qtd_produtos + 1) * sizeof(Produtos));    
+			if (fabricante == NULL) {
+    			printf("Memory not allocated.\n");
+    			exit(0);
+    		}			
+			escolha = cadastro_produto(produto, &qtd_produtos, fabricante, qtd_fabricantes);
+		}
+	}while(escolha == '9' && qtd_produtos < TAM_PRODUTOS);
+
 	do{
 		system("cls");
 		printf("===================================================================================\n");
@@ -587,7 +608,7 @@ char cadastro_fabricante(Fabricantes fabricante[],int *qtd_fabricante, Uf uf[]){
 	listar_uf(uf);
 	escolha = le_valida_opcao_uf();
 	fabricante[*qtd_fabricante].uf = uf[escolha-1];		
-	if (*qtd_fabricante < 2){
+	if (*qtd_fabricante < 1){
 		opcao = '9';
 	}else if(*qtd_fabricante == TAM_FABRICANTES-1){
 		opcao = '0';
@@ -618,7 +639,7 @@ char cadastro_produto(Produtos produto[], int *pt_qtd_produtos, Fabricantes fabr
 	produto[*pt_qtd_produtos].percentual_lucro = (produto[*pt_qtd_produtos].valor_lucro / produto[*pt_qtd_produtos].valor_compra) * 100;
 	escolha= le_valida_escolha_marca(&qtd_fabricantes, fabricante);
 	produto[*pt_qtd_produtos].fabricante = fabricante[escolha-1];
-	if (*pt_qtd_produtos < 5){
+	if (*pt_qtd_produtos < 4){
 		opcao = '9';
 	}else if(*pt_qtd_produtos == TAM_PRODUTOS-1){
 		opcao = '0';

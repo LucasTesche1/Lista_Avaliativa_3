@@ -94,31 +94,25 @@ int main(){
 	
 
 	do{
-		if(qtd_fabricantes == TAM_FABRICANTES){				
-			printf("Limite de Fabricantes atingido\n");
-			system("PAUSE");
-		}else{
-			fabricante = realloc(fabricante, (qtd_fabricantes + 1) * sizeof(Fabricantes));    
-			if (fabricante == NULL) {
-    			printf("Memory not allocated.\n");
-    			exit(0);
-    		}			
-			escolha = cadastro_fabricante(fabricante, &qtd_fabricantes, uf);	
-		}
+		
+		fabricante = realloc(fabricante, (qtd_fabricantes + 1) * sizeof(Fabricantes));    
+		if (fabricante == NULL) {
+    		printf("Memory not allocated.\n");
+    		exit(0);
+    	}			
+		escolha = cadastro_fabricante(fabricante, &qtd_fabricantes, uf);	
+			
 	}while(escolha == '9' && qtd_fabricantes < TAM_FABRICANTES);
 
 	do{
-		if(qtd_produtos == TAM_PRODUTOS){
-			printf("Limite de Produtos atingido\n");
-			system("PAUSE");
-		}else{
-			produto = realloc(produto, (qtd_produtos + 1) * sizeof(Produtos));    
-			if (fabricante == NULL) {
-    			printf("Memory not allocated.\n");
-    			exit(0);
-    		}			
-			escolha = cadastro_produto(produto, &qtd_produtos, fabricante, qtd_fabricantes);
-		}
+
+		produto = realloc(produto, (qtd_produtos + 1) * sizeof(Produtos));    
+		if (fabricante == NULL) {
+    		printf("Memory not allocated.\n");
+    		exit(0);
+    	}			
+		escolha = cadastro_produto(produto, &qtd_produtos, fabricante, qtd_fabricantes);
+		
 	}while(escolha == '9' && qtd_produtos < TAM_PRODUTOS);
 
 	do{

@@ -91,8 +91,6 @@ int main(){
         exit(0);
     }
 
-	
-
 	do{
 		
 		fabricante = realloc(fabricante, (qtd_fabricantes + 1) * sizeof(Fabricantes));    
@@ -591,7 +589,12 @@ char cadastro_fabricante(Fabricantes fabricante[],int *qtd_fabricante, Uf uf[]){
 	char opcao;
 
 	system("cls");
-	printf("\tCadastro de fabricantes\n");
+	printf("===================================================================================\n");
+	printf("\t\t\tCADASTRO DE FABRICANTES\n");
+	printf("===================================================================================\n");
+	printf("\n------------------------------\n");
+	printf("\tFabricante %d\n", *qtd_fabricante+1);
+	printf("------------------------------\n");
 	printf("Marca: ");
 	scanf(" %[^\n]", &fabricante[*qtd_fabricante].marca);
 	printf("Site: ");
@@ -607,7 +610,7 @@ char cadastro_fabricante(Fabricantes fabricante[],int *qtd_fabricante, Uf uf[]){
 	}else if(*qtd_fabricante == TAM_FABRICANTES-1){
 		opcao = '0';
 	}else{
-		printf("\n\n- [0] Voltar para a tela inicial\n");
+		printf("\n\n- [0] Finalizar cadastro\n");
 		printf("- [9] Continuar cadastrando\n"); 
 		opcao=le_valida_opcao_retorno();
 	}
@@ -623,7 +626,12 @@ char cadastro_produto(Produtos produto[], int *pt_qtd_produtos, Fabricantes fabr
 	
 
 	system("cls");
-	printf("\tCadastro de produtos\n");
+	printf("===================================================================================\n");
+	printf("\t\t\tCADASTRO DE PRODUTOS\n");
+	printf("===================================================================================\n");
+	printf("\n------------------------------\n");
+	printf("\tProduto %d\n", *pt_qtd_produtos+1);
+	printf("------------------------------\n");
 	printf("Descricao: ");
 	scanf(" %[^\n]s", &produto[*pt_qtd_produtos].descricao);
 	produto[*pt_qtd_produtos].peso = le_valida_peso();
@@ -638,7 +646,7 @@ char cadastro_produto(Produtos produto[], int *pt_qtd_produtos, Fabricantes fabr
 	}else if(*pt_qtd_produtos == TAM_PRODUTOS-1){
 		opcao = '0';
 	}else{
-		printf("\n\n- [0] Voltar para a tela inicial\n");
+		printf("\n\n- [0] Finalizar cadastro\n");
 		printf("- [9] Continuar cadastrando\n");
 		opcao=le_valida_opcao_retorno();
 	}
@@ -775,6 +783,7 @@ int le_valida_opcao_retorno(){
 	char opcao;
     do{
         if(count>0){
+			printf("\n-----ERRO!-----\n");
             printf("\nEscolha 0 ou 9!\n");
         }
         printf("\nEscolha: ");
@@ -789,6 +798,7 @@ int le_valida_opcao_uf(){
 
     do{
         if(count>0){
+			printf("\n-----ERRO!-----\n");
             printf("\nEscolha entre 1 e 27!\n");
         }
         printf("\nEscolha: ");
@@ -807,8 +817,8 @@ int le_valida_escolha_marca(int *qtd_fabricantes, Fabricantes fabricante[]){
 	}
 	do{
 		if(count >0){
-			printf("\t--Erro--\n");
-			printf("Escolha entre 1 e %d\n", *qtd_fabricantes);
+			printf("\n\t-----ERRO!-----\n");
+			printf("Escolha entre  as opcoes 1 e %d\n", *qtd_fabricantes);
 		}
 		printf("Escolha: ");
 		scanf("%d", &escolha);
@@ -823,8 +833,8 @@ float le_valida_peso(){
 	int count=0;
 	do{
 		if(count > 0){
-			printf("\t--Erro--\n");
-			printf("Peso permitido entre 0.05kg e 50kg\n");
+			printf("\n\t-----ERRO!-----\n");
+			printf("Peso permitido entre 0.05kg e 50kg\n\n");
 		}	
 		printf("Peso(kg): ");
 		scanf("%f", &peso);
@@ -840,8 +850,8 @@ float le_valida_compra(){
 	
 	do{
 		if(count > 0){
-			printf("\t--Erro--\n");
-			printf("Valor permitido entre R$ 0.50 e R$ 8000\n");
+			printf("\n\t-----ERRO!-----\n");
+			printf("Valor permitido entre R$ 0.50 e R$ 8000\n\n");
 		}	
 		printf("Valor Compra: ");
 		scanf("%f", &valor_compra);
@@ -858,8 +868,8 @@ float le_valida_venda(){
 	
 	do{
 		if(count > 0){
-			printf("\t--Erro--\n");
-			printf("Valor permitido entre R$ 1 e R$ 10000\n");
+			printf("\n\t-----ERRO!-----\n");
+			printf("Valor permitido entre R$ 1 e R$ 10000\n\n");
 		}	
 		printf("Valor Venda: ");
 		scanf("%f", &valor_venda);
